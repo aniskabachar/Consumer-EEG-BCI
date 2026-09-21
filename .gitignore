@@ -1,17 +1,39 @@
-# Large data files  
-*.mat
-*.pth
-*.npz
+# ─── Large raw data (too big for GitHub) ───────────────────────
+# Raw EEG recordings (~115-128 MB each) — download from SEED-VIG website
+SEED-VIG/Raw_Data/*.mat
 
-# Python cache
+# Pre-extracted features from SEED-VIG (not needed by our pipeline)
+SEED-VIG/EOG_Feature/
+SEED-VIG/Forehead_EEG/
+SEED-VIG/EEG_Feature_5Bands/
+
+# Processed dataset (1.1 GB) — regenerate with: python main.py preprocess
+processed_data/*.npz
+processed_data/EEG_Feature_2Hz/
+
+# Trained model weights — regenerate with: python main.py train
+processed_data/saved_models/*.pth
+
+# Root-level generated files
+baseline_roc_data.npz
+roc_data.npz
+
+# ─── Python cache ───────────────────────────────────────────────
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
 
-# Virtual environments
+# ─── Virtual environments ───────────────────────────────────────
 venv/
 env/
+.venv/
 
-# System files
+# ─── System files ───────────────────────────────────────────────
 .DS_Store
 Thumbs.db
+
+# ─── Jupyter / IDE ──────────────────────────────────────────────
+.ipynb_checkpoints/
+.vscode/
+.idea/
