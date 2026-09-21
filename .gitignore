@@ -1,0 +1,17 @@
+# Large data files  
+*.mat
+*.pth
+*.npz
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+env/
+
+# System files
+.DS_Store
+Thumbs.db
