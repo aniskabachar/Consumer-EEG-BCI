@@ -1,0 +1,17 @@
+# Large data files
+*.mat
+*.pth
+*.npz
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE files
+.vscode/
+.idea/
