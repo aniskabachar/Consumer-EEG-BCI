@@ -17,24 +17,26 @@ from pathlib import Path
 
 # ─────────────────────────────────────────────────
 #  CHANNEL CONFIGURATION
-#  These 5 channels are selected by data-driven analysis
-#  (MI + Random Forest + RFE all agree on these)
-#  They map to forehead + crown + back-of-head positions
-#  which are accessible on consumer 4-5 electrode headsets
+#  SEED-VIG Raw_Data contains 17 TEMPORAL + POSTERIOR channels
+#  (verified from the `chn` field of raw['EEG'] in every .mat file).
+#  It has NO frontal / forehead (Fp*, AF*, F*) EEG channels.
 # ─────────────────────────────────────────────────
 SEED_VIG_CHANNELS = [
-    'FP1', 'FPZ', 'FP2', 'AF3', 'AF4',
-    'F7', 'F5', 'F3', 'F1', 'FZ',
-    'F2', 'F4', 'F6', 'F8', 'FC5',
-    'FC3', 'FC1'
-]  # 17 channels in SEED-VIG
+    'FT7', 'FT8', 'T7', 'T8', 'TP7',
+    'TP8', 'CP1', 'CP2', 'P1', 'PZ',
+    'P2', 'PO3', 'POZ', 'PO4', 'O1',
+    'OZ', 'O2'
+]  # 17 channels in SEED-VIG, in file order
 
-# Best 5 channels for attention detection
-# Why these? Frontal (FP1/FP2/FZ) = prefrontal cortex = executive attention
-# Parietal (PZ) = sustained attention   Occipital (OZ) = visual attention
-# NOTE: SEED-VIG has 17 channels, we approximate these positions
-SELECTED_5CH_INDICES = [0, 1, 2, 9, 16]  # FP1, FPZ, FP2, FZ, FC1 (closest to Fp1,Fp2,Fz,Pz,Oz)
-SELECTED_5CH_NAMES = ['Fp1', 'Fpz', 'Fp2', 'Fz', 'FC1']
+# The 5 channels used for training/inference:
+#   FT7, FT8, T7 = fronto-temporal / temporal (near the temples, pick up
+#                  lateral eye-movement EOG and temporal-muscle activity)
+#   PZ           = midline parietal
+#   O2           = right occipital (posterior alpha, a classic drowsiness marker)
+# NOTE: PZ and O2 sit on hair-bearing scalp; this is NOT a forehead montage.
+SELECTED_5CH_INDICES = [0, 1, 2, 9, 16]
+SELECTED_5CH_NAMES = [SEED_VIG_CHANNELS[i] for i in SELECTED_5CH_INDICES]
+# → ['FT7', 'FT8', 'T7', 'PZ', 'O2']
 
 
 class EEGPreprocessor:
@@ -52,13 +54,30 @@ class EEGPreprocessor:
     └─────────────────────────────────────────────────────────┘
     """
 
-    def __init__(self, fs_original=200, fs_target=200):
+    def __init__(self, fs_original=200, fs_target=200, norm='epoch', calib_seconds=300,
+                 clip=10.0, window_seconds=2.0, step_seconds=None):
+        # norm='epoch'   : z-score every 2 s epoch on its own (original pipeline).
+        #                  Removes absolute band power, which carries drowsiness info.
+        # norm='subject' : z-score each recording with per-channel statistics taken
+        #                  from its first `calib_seconds` of filtered EEG only (an
+        #                  unlabeled calibration period, as a real device would record
+        #                  at start-up). Keeps power changes over the session.
+        if norm not in ('epoch', 'subject'):
+            raise ValueError(f"norm must be 'epoch' or 'subject', got {norm!r}")
+        self.norm = norm
+        self.calib_seconds = calib_seconds
+        self.clip = clip
         # SEED-VIG Raw_Data is ALREADY at 200 Hz (confirmed: sample_rate field = 200)
         # So fs_original == fs_target == 200, and downsample is skipped.
         self.fs_original = fs_original
         self.fs_target = fs_target
-        self.samples_per_epoch = int(2.0 * fs_target)   # 2s × 200Hz = 400 samples
-        self.step_size = self.samples_per_epoch // 2     # 50% overlap = 200 samples
+        # Default: 2 s windows (400 samples), 50% overlap (200-sample step).
+        # Longer windows (e.g. 4 s / 2 s step) give finer spectral resolution and sit
+        # closer to the 8 s PERCLOS label length.
+        if step_seconds is None:
+            step_seconds = window_seconds / 2
+        self.samples_per_epoch = int(window_seconds * fs_target)
+        self.step_size = int(step_seconds * fs_target)
         # PERCLOS: 885 values, each spans 8 seconds = 8×200 = 1600 EEG samples
         self.perclos_samples_per_label = int(8.0 * fs_target)  # = 1600
 
@@ -166,6 +185,17 @@ class EEGPreprocessor:
         std  = epochs.std(axis=1, keepdims=True) + 1e-8
         return (epochs - mean) / std
 
+    def normalize_subject(self, data):
+        """
+        data: (samples, channels) filtered continuous EEG of ONE recording.
+        Robust z-score (median / MAD) using only the first calib_seconds,
+        then clipped to +-clip to stop rare artifacts dominating training.
+        """
+        calib = data[:int(self.calib_seconds * self.fs_target)]
+        center = np.median(calib, axis=0, keepdims=True)
+        scale = 1.4826 * np.median(np.abs(calib - center), axis=0, keepdims=True) + 1e-8
+        return np.clip((data - center) / scale, -self.clip, self.clip)
+
     # ─────────────────────────────────────────────
     #  STEP 6: SELECT 5 CHANNELS
     #  WHY: Consumer headsets only have 4-5 electrodes.
@@ -238,8 +268,11 @@ class EEGPreprocessor:
         data = self.bandpass_filter(raw_eeg)        # (N, 17)
         data = self.notch_filter(data, freq=50.0)   # (N, 17)
         data = self.notch_filter(data, freq=60.0)   # (N, 17)
+        if self.norm == 'subject':
+            data = self.normalize_subject(data)      # (N, 17)
         epochs = self.extract_epochs(data)           # (E, 400, 17)
-        epochs = self.normalize_epochs(epochs)       # (E, 400, 17)
+        if self.norm == 'epoch':
+            epochs = self.normalize_epochs(epochs)   # (E, 400, 17)
 
         labels = self.assign_labels(perclos_labels, len(epochs))
 
@@ -346,14 +379,22 @@ def debug_mat_structure(mat_path):
     print("=" * 40)
 
 
-def process_all_subjects(seed_vig_root, output_path):
+def process_all_subjects(seed_vig_root, output_path, norm='epoch', calib_seconds=300,
+                         out_name=None, window_seconds=2.0, step_seconds=None):
     """Process all SEED-VIG subjects and save unified dataset."""
     raw_dir = Path(seed_vig_root) / 'Raw_Data'
     lbl_dir = Path(seed_vig_root) / 'perclos_labels'
     output_path = Path(output_path)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    preprocessor = EEGPreprocessor()
+    preprocessor = EEGPreprocessor(norm=norm, calib_seconds=calib_seconds,
+                                   window_seconds=window_seconds, step_seconds=step_seconds)
+    if out_name is None:
+        out_name = ('seed_vig_5ch_processed' if norm == 'epoch'
+                    else 'seed_vig_5ch_subjnorm')
+        if window_seconds != 2.0:
+            out_name += f'_win{window_seconds:g}s'
+        out_name += '.npz'
     mat_files = sorted(raw_dir.glob('*.mat'))
 
     all_epochs, all_labels, all_subject_ids = [], [], []
@@ -380,12 +421,14 @@ def process_all_subjects(seed_vig_root, output_path):
     all_labels = np.concatenate(all_labels).astype(np.int64)
     all_subject_ids = np.array(all_subject_ids, dtype=np.int64)
 
-    out_file = output_path / 'seed_vig_5ch_processed.npz'
+    out_file = output_path / out_name
     np.savez_compressed(
         str(out_file),
         epochs=all_epochs,
         labels=all_labels,
-        subject_ids=all_subject_ids
+        subject_ids=all_subject_ids,
+        step_seconds=np.float32(preprocessor.step_size / preprocessor.fs_target),
+        window_seconds=np.float32(preprocessor.samples_per_epoch / preprocessor.fs_target),
     )
 
     print(f"\n✅ Saved: {out_file}")

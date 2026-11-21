@@ -1,0 +1,211 @@
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  0: acc=0.5594
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  1: acc=0.7877
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  2: acc=0.8332
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  3: acc=0.6625
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  4: acc=0.7426
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  5: acc=0.7042
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  6: acc=0.8036
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  7: acc=0.8590
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  8: acc=0.9119
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject  9: acc=0.6799
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 10: acc=0.8527
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 11: acc=0.5936
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 12: acc=0.8086
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 13: acc=0.9058
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 14: acc=0.6976
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 15: acc=0.6851
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 16: acc=0.7525
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 17: acc=0.8289
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 18: acc=0.7967
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 19: acc=0.7329
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 20: acc=0.8195
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 21: acc=0.7526
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+Subject 22: acc=0.8145
+
+==================================================
+LOSO-CV FINAL RESULTS
+==================================================
+Overall Accuracy:  0.7646
+F1 Score (macro):  0.7374
+AUC-ROC:           0.7980
+
+Per-subject accuracy:
+  Subject  0: ████████████████               0.559
+  Subject  1: ███████████████████████        0.788
+  Subject  2: ████████████████████████       0.833
+  Subject  3: ███████████████████            0.663
+  Subject  4: ██████████████████████         0.743
+  Subject  5: █████████████████████          0.704
+  Subject  6: ████████████████████████       0.804
+  Subject  7: █████████████████████████      0.859
+  Subject  8: ███████████████████████████    0.912
+  Subject  9: ████████████████████           0.680
+  Subject 10: █████████████████████████      0.853
+  Subject 11: █████████████████              0.594
+  Subject 12: ████████████████████████       0.809
+  Subject 13: ███████████████████████████    0.906
+  Subject 14: ████████████████████           0.698
+  Subject 15: ████████████████████           0.685
+  Subject 16: ██████████████████████         0.753
+  Subject 17: ████████████████████████       0.829
+  Subject 18: ███████████████████████        0.797
+  Subject 19: █████████████████████          0.733
+  Subject 20: ████████████████████████       0.819
+  Subject 21: ██████████████████████         0.753
+  Subject 22: ████████████████████████       0.815
+
+Mean ± Std: 0.7646 ± 0.0892
+
+Confusion Matrix:
+              Predicted
+              Focused  Relaxed
+Actual Focused  88438    17872
+Actual Relaxed  20461    36046
+
+Noise Robustness Test (per-fold, held-out subjects only):
+────────────────────────────────────────
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  Noise 0% (SNR≈ infdB): 0.7646
+  Noise 5% (SNR≈  26dB): 0.7645
+  Noise 10% (SNR≈  20dB): 0.7636
+  Noise 20% (SNR≈  14dB): 0.7604
+  Noise 30% (SNR≈  10dB): 0.7527
+  Noise 50% (SNR≈   6dB): 0.7361
+  (23 fold models, 162,817 held-out epochs)

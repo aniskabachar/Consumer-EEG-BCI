@@ -24,7 +24,11 @@ def cmd_preprocess(args):
     from data_processing.preprocessor import process_all_subjects
     process_all_subjects(
         seed_vig_root=args.data_dir,
-        output_path=args.output_dir
+        output_path=args.output_dir,
+        norm=args.norm,
+        calib_seconds=args.calib_seconds,
+        window_seconds=args.window_seconds,
+        step_seconds=args.step_seconds,
     )
 
 
@@ -37,15 +41,19 @@ def cmd_train(args):
         batch_size=args.batch_size,
         max_folds=args.max_folds,
         num_workers=args.num_workers,
-        use_amp=not args.no_amp
+        use_amp=not args.no_amp,
+        n_val_subjects=args.n_val_subjects,
+        patience=args.patience,
     )
 
 
 def cmd_evaluate(args):
+    import torch
     from evaluation.evaluate import evaluate_loso, noise_robustness_test
-    evaluate_loso(args.data_path, args.models_dir)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    evaluate_loso(args.data_path, args.models_dir, device=device)
     if args.noise_test:
-        noise_robustness_test(args.data_path, args.model)
+        noise_robustness_test(args.data_path, args.models_dir, device=device)
 
 
 def cmd_demo(args):
@@ -62,6 +70,15 @@ def main():
     pp = sub.add_parser('preprocess')
     pp.add_argument('--data_dir',   default='./SEED-VIG')
     pp.add_argument('--output_dir', default='./processed_data')
+    pp.add_argument('--norm', choices=['epoch', 'subject'], default='epoch',
+                    help="epoch: z-score each 2 s epoch; subject: z-score each recording "
+                         "from its first --calib_seconds (saved as seed_vig_5ch_subjnorm.npz)")
+    pp.add_argument('--calib_seconds', type=int, default=300,
+                    help='Calibration length for --norm subject')
+    pp.add_argument('--window_seconds', type=float, default=2.0,
+                    help='Epoch length in seconds (non-default adds _win<N>s to the file name)')
+    pp.add_argument('--step_seconds', type=float, default=None,
+                    help='Epoch step in seconds (default: half the window = 50%% overlap)')
 
     # Train
     tr = sub.add_parser('train')
@@ -75,13 +92,17 @@ def main():
                     help='DataLoader worker processes')
     tr.add_argument('--no_amp', action='store_true',
                     help='Disable CUDA mixed precision training')
+    tr.add_argument('--n_val_subjects', type=int, default=3,
+                    help='Training subjects held out per fold for epoch selection / early stopping')
+    tr.add_argument('--patience', type=int, default=25,
+                    help='Early stopping: epochs without validation improvement')
 
     # Evaluate
     ev = sub.add_parser('evaluate')
     ev.add_argument('--data_path',  required=True)
     ev.add_argument('--models_dir', default='./saved_models')
-    ev.add_argument('--model',      default=None)
-    ev.add_argument('--noise_test', action='store_true')
+    ev.add_argument('--noise_test', action='store_true',
+                    help='Also run the per-fold noise robustness test')
 
     # Demo
     dm = sub.add_parser('demo')

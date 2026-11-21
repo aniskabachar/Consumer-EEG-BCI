@@ -24,7 +24,7 @@ Raw 5-channel EEG (200Hz)
 
 **Model:** ~268K parameters | **Input:** (batch, 5 channels, 400 samples) | **Output:** binary class
 
-**5 channels:** Fp1, Fpz, Fp2, Fz, FC1 — works with consumer 4-5 electrode headsets
+**5 channels:** FT7, FT8, T7, PZ, O2 (temporal + parietal/occipital). SEED-VIG's raw EEG has no forehead channels, so this is not a forehead-headband montage.
 
 ---
 
@@ -52,8 +52,8 @@ Consumer-EEG-BCI/
 │   └── realtime_inference.py      # Real-time BCI inference engine
 │
 ├── SEED-VIG/
-│   ├── Raw_Data/                  # ← NOT in git (~2.8 GB) — download separately
-│   ├── perclos_labels/            # ← IN git already (tiny label files)
+│   ├── Raw_Data/                  # ← NOT in git (~2.8 GB) — obtain from the lab
+│   ├── perclos_labels/            # ← NOT in git — obtain from the lab
 │   ├── Readme_English.txt
 │   └── channel_62_pos.locs
 │
@@ -97,22 +97,18 @@ pip install -r requirements.txt
 > pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 > ```
 
-### 4. Download the SEED-VIG Raw Data
+### 4. Get the SEED-VIG data
 
-The raw EEG `.mat` files (~2.8 GB total) are NOT in this repo. Download them manually:
+No SEED-VIG data is in this repo (it is distributed by the lab on request and must not be republished).
 
-1. Go to: https://bcmi.sjtu.edu.cn/home/seed/seed-vig.html
-2. Register and download the dataset
-3. Place the 23 `.mat` files into:
+1. Request access at: https://bcmi.sjtu.edu.cn/home/seed/seed-vig.html
+2. Place the 23 raw EEG files and the 23 PERCLOS label files (same file names) into:
 
 ```
-SEED-VIG/Raw_Data/
-├── 1_20151124_noon_2.mat
-├── 2_20151106_noon.mat
-├── ...  (23 files)
+SEED-VIG/
+├── Raw_Data/          1_20151124_noon_2.mat, 2_20151106_noon.mat, ... (23 files)
+└── perclos_labels/    1_20151124_noon_2.mat, 2_20151106_noon.mat, ... (23 files)
 ```
-
-> The `SEED-VIG/perclos_labels/` folder is already in the repo — do NOT move or re-download it.
 
 ### 5. Run the pipeline
 
@@ -122,10 +118,15 @@ python main.py preprocess --data_dir ./SEED-VIG --output_dir ./processed_data
 ```
 
 **Step 2 — Train** (LOSO cross-validation, 23 folds):
+
+Each fold holds out the test subject, and 3 further training subjects (`--n_val_subjects`) are used to pick the best epoch and for early stopping. The test subject is scored once, after training.
+
+> Models in `processed_data/saved_models/` were trained with the older script, which picked epochs on the test subject. Save new runs to a fresh folder (the trainer skips folds whose file already exists).
+
 ```bash
 python main.py train \
   --data_path ./processed_data/seed_vig_5ch_processed.npz \
-  --save_dir ./processed_data/saved_models \
+  --save_dir ./processed_data/saved_models_v2 \
   --epochs 80 \
   --batch_size 64
 ```
@@ -139,8 +140,11 @@ python main.py train --data_path ./processed_data/seed_vig_5ch_processed.npz --m
 ```bash
 python main.py evaluate \
   --data_path ./processed_data/seed_vig_5ch_processed.npz \
-  --models_dir ./processed_data/saved_models
+  --models_dir ./processed_data/saved_models_v2 \
+  --noise_test
 ```
+
+`--noise_test` scores each subject with its own fold model only (held-out data).
 
 **Step 4 — Real-time demo:**
 ```bash
@@ -157,7 +161,7 @@ Raw EEG (200 Hz, 17 channels)
   → Notch filter     50 Hz + 60 Hz
   → Epoch            2s windows, 50% overlap  → (400 samples, 17 ch)
   → Z-score normalize  (per channel, per epoch)
-  → Select 5 channels  [FP1, FPZ, FP2, FZ, FC1]
+  → Select 5 channels  [FT7, FT8, T7, PZ, O2]
   → Label  PERCLOS > 0.5 → Drowsy(1), else Alert(0)
 ```
 
@@ -168,8 +172,8 @@ Raw EEG (200 Hz, 17 channels)
 | Property | Value |
 |---|---|
 | Subjects | 23 |
-| EEG channels (raw) | 17 (forehead region) |
-| Channels used | 5 (FP1, FPZ, FP2, FZ, FC1) |
+| EEG channels (raw) | 17 (temporal + posterior: FT7, FT8, T7, T8, TP7, TP8, CP1, CP2, P1, PZ, P2, PO3, POZ, PO4, O1, OZ, O2) |
+| Channels used | 5 (FT7, FT8, T7, PZ, O2) |
 | Sampling rate | 200 Hz |
 | Labels | PERCLOS (eye closure %) per 8s |
 | Task | Simulated driving, ~2 hours |

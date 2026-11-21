@@ -16,6 +16,7 @@ This is exactly what your consumer product needs:
 A user buys the headset → NO calibration → it just works.
 """
 
+import time
 import numpy as np
 import torch
 import torch.nn as nn
@@ -28,7 +29,7 @@ _project_root = str(Path(__file__).resolve().parent.parent)
 if _project_root not in sys.path:
     sys.path.insert(0, _project_root)
 
-from models.bci_model import build_model
+from evaluation.models.bci_model import build_model
 
 
 # ────────────────────────────────────────────────────
@@ -157,27 +158,38 @@ class Trainer:
     def train_subject_independent(self, epochs_data, labels_data, subject_ids,
                                   n_epochs=80, batch_size=64, lr=1e-3,
                                   save_dir='saved_models', max_folds=None,
-                                  num_workers=0):
+                                  num_workers=0, n_val_subjects=3, seed=42,
+                                  patience=25):
         """
         LOSO Cross-Validation training.
 
         For each subject:
-            train_subjects = all EXCEPT current subject
-            test_subject   = current subject
+            test_subject   = current subject (touched ONLY once, after training)
+            val_subjects   = n_val_subjects drawn from the remaining subjects,
+                             used for best-epoch selection + early stopping
+            train_subjects = everything else
 
-        This is subject-INDEPENDENT training = true generalization test.
+        The test subject never influences which weights are kept, so the
+        per-fold test accuracy is an unbiased cross-subject estimate.
         """
         save_dir = Path(save_dir)
-        save_dir.mkdir(exist_ok=True)
+        save_dir.mkdir(parents=True, exist_ok=True)
 
         unique_subjects = np.unique(subject_ids)
         fold_accuracies = []
+        rng = np.random.default_rng(seed)
+        torch.manual_seed(seed)
 
         print(f"\n{'='*60}")
         print(f"LOSO-CV: {len(unique_subjects)} folds")
         print(f"{'='*60}\n")
 
         for fold, test_subject in enumerate(unique_subjects):
+            # Draw this fold's validation subjects up front (even for skipped
+            # folds) so the split for every fold is the same on resume.
+            candidates = unique_subjects[unique_subjects != test_subject]
+            val_subjects = np.sort(rng.choice(candidates, size=n_val_subjects, replace=False))
+
             save_path = save_dir / f'fold_{fold+1}_subject_{test_subject}.pth'
             if save_path.exists():
                 print(f"Fold {fold+1}/{len(unique_subjects)} - SKIP (already saved: {save_path.name})", flush=True)
@@ -189,13 +201,18 @@ class Trainer:
 
             print(f"Fold {fold+1}/{len(unique_subjects)} — Test subject: {test_subject}")
 
-            print(f"  [1/6] Splitting train/test masks...", flush=True)
-            # Split data
-            train_mask = subject_ids != test_subject
+            print(f"  [1/6] Splitting train/val/test masks...", flush=True)
+            # Split data: test subject is held out; validation subjects are
+            # carved out of the training pool for model selection.
             test_mask  = subject_ids == test_subject
+            val_mask   = np.isin(subject_ids, val_subjects)
+            train_mask = ~test_mask & ~val_mask
+            print(f"  Validation subjects: {val_subjects.tolist()}", flush=True)
 
             X_train = epochs_data[train_mask]
             y_train = labels_data[train_mask]
+            X_val   = epochs_data[val_mask]
+            y_val   = labels_data[val_mask]
             X_test  = epochs_data[test_mask]
             y_test  = labels_data[test_mask]
 
@@ -211,6 +228,7 @@ class Trainer:
             n_relaxed = int((y_train == 1).sum())
 
             train_ds = EEGDataset(X_train, y_train, augment=True)
+            val_ds   = EEGDataset(X_val, y_val, augment=False)
             test_ds  = EEGDataset(X_test, y_test, augment=False)
 
             print(f"  [3/6] Building DataLoaders...", flush=True)
@@ -223,6 +241,7 @@ class Trainer:
                 loader_kwargs['persistent_workers'] = True
 
             train_loader = DataLoader(train_ds, shuffle=True, **loader_kwargs)
+            val_loader   = DataLoader(val_ds, shuffle=False, **loader_kwargs)
             test_loader  = DataLoader(test_ds, shuffle=False, **loader_kwargs)
 
             print(f"  [4/6] Moving model to device...", flush=True)
@@ -245,37 +264,42 @@ class Trainer:
             ]).to(self.device)
             criterion = nn.CrossEntropyLoss(weight=class_weights)
 
-            best_acc = 0
+            best_val_acc = -1.0
             best_state = None
-            patience = 25
             epochs_no_improve = 0
 
             print(f"  [6/6] Starting training loop...", flush=True)
             for epoch in range(n_epochs):
                 train_loss, train_acc = self.train_one_epoch(model, train_loader, optimizer, criterion)
-                val_loss, val_acc, _, _ = self.evaluate(model, test_loader, criterion)
+                # Model selection uses the VALIDATION subjects only
+                val_loss, val_acc, _, _ = self.evaluate(model, val_loader, criterion)
                 scheduler.step()
 
-                if val_acc > best_acc:
-                    best_acc = val_acc
+                if val_acc > best_val_acc:
+                    best_val_acc = val_acc
                     best_state = {k: v.cpu().clone() for k, v in model.state_dict().items()}
                     epochs_no_improve = 0
                 else:
                     epochs_no_improve += 1
 
-                if epoch == 0 or (epoch + 1) % 10 == 0:
+                if epoch == 0 or (epoch + 1) % 5 == 0:
                     print(f"  Epoch {epoch+1:3d}/{n_epochs} | "
                           f"Train: {train_acc:.3f} | Val: {val_acc:.3f} | "
-                          f"LR: {scheduler.get_last_lr()[0]:.6f}", flush=True)
+                          f"LR: {scheduler.get_last_lr()[0]:.6f} | "
+                          f"{time.strftime('%H:%M:%S')}", flush=True)
 
                 if epochs_no_improve >= patience:
                     print(f"  Early stop at epoch {epoch+1} (no improvement for {patience} epochs)", flush=True)
                     break
 
-            fold_accuracies.append(best_acc)
-            print(f"  ✓ Best accuracy: {best_acc:.4f}\n")
+            # Score the selected weights on the test subject exactly once
+            model.load_state_dict(best_state)
+            _, test_acc, _, _ = self.evaluate(model, test_loader, criterion)
+            fold_accuracies.append(test_acc)
+            print(f"  ✓ Best val accuracy: {best_val_acc:.4f} | "
+                  f"Test accuracy (held-out subject {test_subject}): {test_acc:.4f}\n", flush=True)
 
-            # Save best model for this fold
+            # Save selected model for this fold
             torch.save(best_state, save_path)
 
         mean_acc = np.mean(fold_accuracies)
@@ -352,7 +376,8 @@ class PersonalCalibrator:
 # ────────────────────────────────────────────────────
 
 def train(data_path, save_dir='saved_models', n_epochs=80, batch_size=64,
-          max_folds=None, num_workers=0, use_amp=True):
+          max_folds=None, num_workers=0, use_amp=True, n_val_subjects=3,
+          patience=25):
     """Main training function."""
     print("Loading processed data...")
     data = np.load(data_path)
@@ -370,7 +395,9 @@ def train(data_path, save_dir='saved_models', n_epochs=80, batch_size=64,
         batch_size=batch_size,
         save_dir=save_dir,
         max_folds=max_folds,
-        num_workers=num_workers
+        num_workers=num_workers,
+        n_val_subjects=n_val_subjects,
+        patience=patience,
     )
 
     return fold_accs, mean_acc, std_acc
