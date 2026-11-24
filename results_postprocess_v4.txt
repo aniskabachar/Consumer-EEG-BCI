@@ -1,0 +1,133 @@
+Epoch step: 2 s
+Computing per-fold probabilities on cuda ...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  1/23 done (val [2, 15, 17])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  2/23 done (val [2, 16, 18])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  3/23 done (val [11, 17, 21])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  4/23 done (val [2, 11, 16])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  5/23 done (val [5, 8, 11])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  6/23 done (val [9, 13, 19])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  7/23 done (val [2, 4, 10])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  8/23 done (val [1, 19, 22])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold  9/23 done (val [3, 16, 22])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 10/23 done (val [10, 20, 22])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 11/23 done (val [4, 8, 16])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 12/23 done (val [0, 3, 12])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 13/23 done (val [8, 16, 19])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 14/23 done (val [6, 8, 20])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 15/23 done (val [3, 10, 16])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 16/23 done (val [4, 6, 9])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 17/23 done (val [3, 9, 19])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 18/23 done (val [2, 6, 14])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 19/23 done (val [8, 16, 19])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 20/23 done (val [5, 15, 21])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 21/23 done (val [4, 16, 17])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 22/23 done (val [14, 15, 16])
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  fold 23/23 done (val [5, 12, 16])
+
+Setting                               Acc     F1    AUC     Mean±Std  Alert Drowsy
+------------------------------------------------------------------------------------
+Baseline (no post-processing)      0.7792 0.7507 0.8108 0.779±0.089  0.856  0.635
+Smoothing only (tuned for acc)     0.8142 0.7860 0.8555 0.814±0.091  0.901  0.650
+Threshold only (tuned for acc)     0.7861 0.7562 0.8108 0.786±0.081  0.870  0.628
+Smoothing + threshold (acc)        0.8175 0.7924 0.8564 0.818±0.091  0.893  0.676
+Smoothing + threshold (macro F1)   0.7946 0.7726 0.8560 0.795±0.114  0.847  0.696
+Smoothing, fixed 45 s window       0.8166 0.7888 0.8590 0.817±0.090  0.903  0.654
+(Alert / Drowsy = per-class recall; settings tuned per fold on validation subjects only)
+
+Smoothing + threshold (acc): window median 60 s (range 30-120), threshold median 0.48 (range 0.24-0.80)
+
+Smoothing + threshold (macro F1): window median 60 s (range 30-120), threshold median 0.48 (range 0.20-0.70)
+
+Per-subject accuracy (baseline -> smoothing+threshold):
+  Subject  0: 0.621 -> 0.681  (+0.060)
+  Subject  1: 0.716 -> 0.788  (+0.072)
+  Subject  2: 0.912 -> 0.940  (+0.028)
+  Subject  3: 0.636 -> 0.686  (+0.050)
+  Subject  4: 0.754 -> 0.734  (-0.020)
+  Subject  5: 0.733 -> 0.574  (-0.159)
+  Subject  6: 0.801 -> 0.821  (+0.020)
+  Subject  7: 0.878 -> 0.917  (+0.039)
+  Subject  8: 0.917 -> 0.930  (+0.013)
+  Subject  9: 0.712 -> 0.791  (+0.079)
+  Subject 10: 0.871 -> 0.898  (+0.027)
+  Subject 11: 0.715 -> 0.870  (+0.156)
+  Subject 12: 0.749 -> 0.820  (+0.071)
+  Subject 13: 0.918 -> 0.918  (+0.000)
+  Subject 14: 0.674 -> 0.702  (+0.028)
+  Subject 15: 0.756 -> 0.832  (+0.075)
+  Subject 16: 0.793 -> 0.808  (+0.015)
+  Subject 17: 0.663 -> 0.868  (+0.205)
+  Subject 18: 0.779 -> 0.813  (+0.034)
+  Subject 19: 0.771 -> 0.818  (+0.046)
+  Subject 20: 0.828 -> 0.824  (-0.004)
+  Subject 21: 0.904 -> 0.937  (+0.033)
+  Subject 22: 0.821 -> 0.833  (+0.012)

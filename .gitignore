@@ -13,10 +13,6 @@ processed_data/*.npz
 # python -m evaluation.postprocess)
 processed_data/**/fold_probs.npz
 
-# Model set / log of a training run still in progress
-processed_data/saved_models_v4/
-train_v4_log*.txt
-
 # ─── Python cache & virtual env (never push these) ──────────────
 __pycache__/
 *.pyc

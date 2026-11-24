@@ -1,0 +1,330 @@
+Loading processed data...
+Dataset: 81,397 epochs | 23 subjects
+Focused: 53,138 | Relaxed: 28,259
+Using device: cuda
+Using mixed precision: enabled
+
+============================================================
+LOSO-CV: 23 folds
+============================================================
+
+Fold 1/23 - SKIP (already saved: fold_1_subject_0.pth)
+Fold 2/23 - SKIP (already saved: fold_2_subject_1.pth)
+Fold 3/23 - SKIP (already saved: fold_3_subject_2.pth)
+Fold 4/23 - SKIP (already saved: fold_4_subject_3.pth)
+Fold 5/23 - SKIP (already saved: fold_5_subject_4.pth)
+Fold 6/23 - SKIP (already saved: fold_6_subject_5.pth)
+Fold 7/23 - SKIP (already saved: fold_7_subject_6.pth)
+Fold 8/23 - SKIP (already saved: fold_8_subject_7.pth)
+Fold 9/23 — Test subject: 8
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [3, 16, 22]
+  Test labels: Focused=1,943 | Relaxed=1,596
+  Majority-class baseline for this fold: 0.549
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.750 | Val: 0.706 | LR: 0.000998 | 16:17:52
+  Epoch   5/40 | Train: 0.816 | Val: 0.678 | LR: 0.000962 | 16:20:22
+  Epoch  10/40 | Train: 0.831 | Val: 0.697 | LR: 0.000854 | 16:23:21
+  Epoch  15/40 | Train: 0.839 | Val: 0.718 | LR: 0.000692 | 16:26:58
+  Epoch  20/40 | Train: 0.849 | Val: 0.721 | LR: 0.000500 | 16:30:40
+  Early stop at epoch 23 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7569 | Test accuracy (held-out subject 8): 0.9169
+
+Fold 10/23 — Test subject: 9
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [10, 20, 22]
+  Test labels: Focused=2,302 | Relaxed=1,237
+  Majority-class baseline for this fold: 0.650
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.783 | Val: 0.820 | LR: 0.000998 | 16:33:33
+  Epoch   5/40 | Train: 0.829 | Val: 0.831 | LR: 0.000962 | 16:35:55
+  Epoch  10/40 | Train: 0.842 | Val: 0.825 | LR: 0.000854 | 16:38:38
+  Epoch  15/40 | Train: 0.850 | Val: 0.836 | LR: 0.000692 | 16:41:21
+  Epoch  20/40 | Train: 0.861 | Val: 0.829 | LR: 0.000500 | 16:44:33
+  Early stop at epoch 24 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8420 | Test accuracy (held-out subject 9): 0.7121
+
+Fold 11/23 — Test subject: 10
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [4, 8, 16]
+  Test labels: Focused=1,707 | Relaxed=1,832
+  Majority-class baseline for this fold: 0.518
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.753 | Val: 0.797 | LR: 0.000998 | 16:47:54
+  Epoch   5/40 | Train: 0.812 | Val: 0.833 | LR: 0.000962 | 16:50:35
+  Epoch  10/40 | Train: 0.827 | Val: 0.805 | LR: 0.000854 | 16:54:15
+  Epoch  15/40 | Train: 0.839 | Val: 0.818 | LR: 0.000692 | 16:57:40
+  Early stop at epoch 15 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8326 | Test accuracy (held-out subject 10): 0.8709
+
+Fold 12/23 — Test subject: 11
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [0, 3, 12]
+  Test labels: Focused=2,642 | Relaxed=897
+  Majority-class baseline for this fold: 0.747
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.791 | Val: 0.519 | LR: 0.000998 | 16:58:12
+  Epoch   5/40 | Train: 0.829 | Val: 0.645 | LR: 0.000962 | 17:01:03
+  Epoch  10/40 | Train: 0.837 | Val: 0.695 | LR: 0.000854 | 17:04:36
+  Epoch  15/40 | Train: 0.842 | Val: 0.709 | LR: 0.000692 | 17:08:04
+  Epoch  20/40 | Train: 0.853 | Val: 0.714 | LR: 0.000500 | 17:11:20
+  Epoch  25/40 | Train: 0.866 | Val: 0.667 | LR: 0.000309 | 17:14:39
+  Epoch  30/40 | Train: 0.881 | Val: 0.672 | LR: 0.000147 | 17:17:58
+  Early stop at epoch 30 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7143 | Test accuracy (held-out subject 11): 0.7143
+
+Fold 13/23 — Test subject: 12
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [8, 16, 19]
+  Test labels: Focused=2,667 | Relaxed=872
+  Majority-class baseline for this fold: 0.754
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.768 | Val: 0.802 | LR: 0.000998 | 17:18:39
+  Epoch   5/40 | Train: 0.816 | Val: 0.775 | LR: 0.000962 | 17:21:24
+  Epoch  10/40 | Train: 0.830 | Val: 0.815 | LR: 0.000854 | 17:24:52
+  Epoch  15/40 | Train: 0.837 | Val: 0.817 | LR: 0.000692 | 17:28:16
+  Epoch  20/40 | Train: 0.850 | Val: 0.768 | LR: 0.000500 | 17:31:47
+  Early stop at epoch 24 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8299 | Test accuracy (held-out subject 12): 0.7480
+
+Fold 14/23 — Test subject: 13
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [6, 8, 20]
+  Test labels: Focused=3,249 | Relaxed=290
+  Majority-class baseline for this fold: 0.918
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.752 | Val: 0.803 | LR: 0.000998 | 17:35:21
+  Epoch   5/40 | Train: 0.808 | Val: 0.827 | LR: 0.000962 | 17:38:03
+  Epoch  10/40 | Train: 0.822 | Val: 0.835 | LR: 0.000854 | 17:40:37
+  Epoch  15/40 | Train: 0.836 | Val: 0.835 | LR: 0.000692 | 17:43:12
+  Early stop at epoch 18 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8609 | Test accuracy (held-out subject 13): 0.9181
+
+Fold 15/23 — Test subject: 14
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [3, 10, 16]
+  Test labels: Focused=2,198 | Relaxed=1,341
+  Majority-class baseline for this fold: 0.621
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.762 | Val: 0.759 | LR: 0.000998 | 17:45:22
+  Epoch   5/40 | Train: 0.822 | Val: 0.773 | LR: 0.000962 | 17:47:37
+  Epoch  10/40 | Train: 0.837 | Val: 0.757 | LR: 0.000854 | 17:50:08
+  Early stop at epoch 12 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7758 | Test accuracy (held-out subject 14): 0.6739
+
+Fold 16/23 — Test subject: 15
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [4, 6, 9]
+  Test labels: Focused=2,777 | Relaxed=762
+  Majority-class baseline for this fold: 0.785
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.776 | Val: 0.754 | LR: 0.000998 | 17:51:51
+  Epoch   5/40 | Train: 0.833 | Val: 0.740 | LR: 0.000962 | 17:53:58
+  Epoch  10/40 | Train: 0.848 | Val: 0.740 | LR: 0.000854 | 17:57:24
+  Epoch  15/40 | Train: 0.858 | Val: 0.708 | LR: 0.000692 | 18:01:00
+  Early stop at epoch 16 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7660 | Test accuracy (held-out subject 15): 0.7559
+
+Fold 17/23 — Test subject: 16
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [3, 9, 19]
+  Test labels: Focused=1,587 | Relaxed=1,952
+  Majority-class baseline for this fold: 0.552
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.785 | Val: 0.678 | LR: 0.000998 | 18:02:03
+  Epoch   5/40 | Train: 0.838 | Val: 0.699 | LR: 0.000962 | 18:04:03
+  Epoch  10/40 | Train: 0.853 | Val: 0.705 | LR: 0.000854 | 18:06:34
+  Epoch  15/40 | Train: 0.863 | Val: 0.647 | LR: 0.000692 | 18:09:03
+  Epoch  20/40 | Train: 0.875 | Val: 0.618 | LR: 0.000500 | 18:11:38
+  Early stop at epoch 20 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7046 | Test accuracy (held-out subject 16): 0.7929
+
+Fold 18/23 — Test subject: 17
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [2, 6, 14]
+  Test labels: Focused=2,142 | Relaxed=1,397
+  Majority-class baseline for this fold: 0.605
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.766 | Val: 0.764 | LR: 0.000998 | 18:12:08
+  Epoch   5/40 | Train: 0.813 | Val: 0.702 | LR: 0.000962 | 18:14:05
+  Epoch  10/40 | Train: 0.823 | Val: 0.795 | LR: 0.000854 | 18:16:29
+  Epoch  15/40 | Train: 0.833 | Val: 0.739 | LR: 0.000692 | 10:22:56
+  Early stop at epoch 17 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8084 | Test accuracy (held-out subject 17): 0.6637
+
+Fold 19/23 — Test subject: 18
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [8, 16, 19]
+  Test labels: Focused=2,467 | Relaxed=1,072
+  Majority-class baseline for this fold: 0.697
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.770 | Val: 0.730 | LR: 0.000998 | 10:25:15
+  Epoch   5/40 | Train: 0.821 | Val: 0.837 | LR: 0.000962 | 10:28:54
+  Epoch  10/40 | Train: 0.833 | Val: 0.803 | LR: 0.000854 | 10:32:19
+  Epoch  15/40 | Train: 0.846 | Val: 0.779 | LR: 0.000692 | 10:35:38
+  Early stop at epoch 15 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8372 | Test accuracy (held-out subject 18): 0.7793
+
+Fold 20/23 — Test subject: 19
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [5, 15, 21]
+  Test labels: Focused=2,894 | Relaxed=645
+  Majority-class baseline for this fold: 0.818
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.770 | Val: 0.653 | LR: 0.000998 | 10:36:20
+  Epoch   5/40 | Train: 0.827 | Val: 0.763 | LR: 0.000962 | 10:38:52
+  Epoch  10/40 | Train: 0.838 | Val: 0.694 | LR: 0.000854 | 10:42:36
+  Early stop at epoch 13 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7674 | Test accuracy (held-out subject 19): 0.7714
+
+Fold 21/23 — Test subject: 20
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [4, 16, 17]
+  Test labels: Focused=2,870 | Relaxed=669
+  Majority-class baseline for this fold: 0.811
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.773 | Val: 0.791 | LR: 0.000998 | 10:45:30
+  Epoch   5/40 | Train: 0.824 | Val: 0.806 | LR: 0.000962 | 10:47:50
+  Epoch  10/40 | Train: 0.839 | Val: 0.776 | LR: 0.000854 | 10:50:55
+  Early stop at epoch 13 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.8105 | Test accuracy (held-out subject 20): 0.8276
+
+Fold 22/23 — Test subject: 21
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [14, 15, 16]
+  Test labels: Focused=3,017 | Relaxed=522
+  Majority-class baseline for this fold: 0.853
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.765 | Val: 0.662 | LR: 0.000998 | 10:53:25
+  Epoch   5/40 | Train: 0.830 | Val: 0.724 | LR: 0.000962 | 10:56:10
+  Epoch  10/40 | Train: 0.843 | Val: 0.747 | LR: 0.000854 | 10:59:56
+  Epoch  15/40 | Train: 0.851 | Val: 0.734 | LR: 0.000692 | 11:03:59
+  Epoch  20/40 | Train: 0.863 | Val: 0.677 | LR: 0.000500 | 11:08:16
+  Early stop at epoch 20 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7468 | Test accuracy (held-out subject 21): 0.9042
+
+Fold 23/23 — Test subject: 22
+  [1/6] Splitting train/val/test masks...
+  Validation subjects: [5, 12, 16]
+  Test labels: Focused=2,693 | Relaxed=846
+  Majority-class baseline for this fold: 0.761
+  [2/6] Computing class weights (n=67,241)...
+  [3/6] Building DataLoaders...
+  [4/6] Moving model to device...
+✅ Model created: 258,707 trainable parameters
+   SEN params:        101,968
+   Classifier params: 156,739
+  [5/6] Setting up optimizer/scheduler...
+  [6/6] Starting training loop...
+  Epoch   1/40 | Train: 0.778 | Val: 0.696 | LR: 0.000998 | 11:09:07
+  Epoch   5/40 | Train: 0.822 | Val: 0.723 | LR: 0.000962 | 11:12:08
+  Epoch  10/40 | Train: 0.832 | Val: 0.770 | LR: 0.000854 | 11:16:13
+  Epoch  15/40 | Train: 0.842 | Val: 0.689 | LR: 0.000692 | 11:19:54
+  Early stop at epoch 18 (no improvement for 10 epochs)
+  ✓ Best val accuracy: 0.7846 | Test accuracy (held-out subject 22): 0.8209
+
+
+============================================================
+LOSO-CV Results:
+  Per-fold: ['0.917', '0.712', '0.871', '0.714', '0.748', '0.918', '0.674', '0.756', '0.793', '0.664', '0.779', '0.771', '0.828', '0.904', '0.821']
+  Mean ± Std: 0.7913 ± 0.0813
+============================================================
+exit=127
